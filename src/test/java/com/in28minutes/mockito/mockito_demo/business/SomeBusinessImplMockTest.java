@@ -5,18 +5,27 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+//This annotation is necessary for mock injections to work. It allows to automate creation and injection.
+@ExtendWith(MockitoExtension.class)
 class SomeBusinessImplMockTest {
+	
+	//We create a mock for DataService interface
+	@Mock
+	private DataService dataServiceMock;
+	
+	//Once DataService mock is created, we inject it into businessImpl
+	@InjectMocks
+	private SomeBusinessImpl businessImpl;
 
 	@Test
 	void Should_ReturnTrue_WhenEqualTo25() {
 		
-		//Initialise the mock
-		var dataServiceMock = mock(DataService.class);
-		//When the dataServiceMock is called, return these values
-		when(dataServiceMock.retrieveAllData()).thenReturn(new int[] {25, 15, 5});
-		
-		var businessImpl = new SomeBusinessImpl(dataServiceMock);
+		when(dataServiceMock.retrieveAllData()).thenReturn(new int[] {25, 15, 5});	
 		assertEquals(25, businessImpl.findTheGreatestFromAllData());
 	}
 	
@@ -24,14 +33,16 @@ class SomeBusinessImplMockTest {
 	@Test
 	void Should_ReturnTrue_WhenOneValue() {
 		
-		//Initialise the mock
-		var dataServiceMock = mock(DataService.class);
-		//When the dataServiceMock is called, return these values
 		when(dataServiceMock.retrieveAllData()).thenReturn(new int[] {35});
-		
-		var businessImpl = new SomeBusinessImpl(dataServiceMock);
 		assertEquals(35, businessImpl.findTheGreatestFromAllData());
 	}
 	
+	@Test
+	void Should_ReturnTrue_WhenEmptyArray() {
+		
+		when(dataServiceMock.retrieveAllData()).thenReturn(new int[] {});
+		//Not the best practice. Since the original class uses Integer.MIN_VALUE, we use it here too.
+		assertEquals(Integer.MIN_VALUE, businessImpl.findTheGreatestFromAllData());
+	}
 
 }
