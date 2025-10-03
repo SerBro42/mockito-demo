@@ -4,6 +4,11 @@ public class SomeBusinessImpl {
 	
 	private DataService dataService;
 	
+	public SomeBusinessImpl(DataService dataService) {
+		super();
+		this.dataService = dataService;
+	}
+
 	public int findTheGreatestFromAllData() {
 		int[] data = dataService.retrieveAllData();
 		int greatestValue = Integer.MIN_VALUE;
@@ -17,6 +22,8 @@ public class SomeBusinessImpl {
 
 }
 
+//This service should be a separate file, but we created it here.
+//Problem with the stub approach #1: every time we add a new method, we need to update the dataService stub implementation too.
 interface DataService {
 	int[] retrieveAllData();
 }
